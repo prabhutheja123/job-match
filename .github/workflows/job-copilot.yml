@@ -4,21 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       job_description:
-        description: "Paste Job Description text"
+        description: Paste Job Description text
         required: true
-        type: string
       resume_text:
-        description: "Paste Resume text"
+        description: Paste Resume text
         required: true
-        type: string
 
 jobs:
-  test-pipeline:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Print inputs (test only)
+      - name: Show inputs
         run: |
-          echo "JOB DESCRIPTION RECEIVED"
-          echo "${{ inputs.job_description }}"
-          echo "RESUME RECEIVED"
-          echo "${{ inputs.resume_text }}"
+          echo "JD length: ${#JD}"
+          echo "Resume length: ${#RESUME}"
+        env:
+          JD: ${{ github.event.inputs.job_description }}
+          RESUME: ${{ github.event.inputs.resume_text }}
