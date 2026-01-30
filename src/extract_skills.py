@@ -27,10 +27,25 @@ ALIASES = {
     "gcs": "cloud storage",
 }
 
-COMMON_WORDS = set([
-    "and","or","with","for","the","a","an","to","of","in","on","by","using",
-    "experience","knowledge","skills","years","responsibilities","required","preferred"
-])
+# Add more as you see junk in logs
+STOPWORDS = set("""
+a an and are as at be been being by can could did do does doing for from had has have having
+he her hers him his i if in into is it its me my of on or our ours she so than that the
+their them they this those to was we were what when where which who why will with would you your
+""".split())
+
+# Common US states show up in legal job posts
+US_STATES = set("""
+alabama alaska arizona arkansas california colorado connecticut delaware florida georgia hawaii idaho illinois indiana iowa
+kansas kentucky louisiana maine maryland massachusetts michigan minnesota mississippi missouri montana nebraska nevada
+new hampshire new jersey new mexico new york north carolina north dakota ohio oklahoma oregon pennsylvania
+rhode island south carolina south dakota tennessee texas utah vermont virginia washington west virginia wisconsin wyoming
+""".split())
+
+# Policy/legal words that aren't skills
+LEGAL_JUNK = set("""
+equal employment opportunity ordinances notice notices non-sales incentive pay plan qualifications legal state-specific
+""".split())
 
 def load_skills(path="src/skills_master.txt") -> list:
     text = Path(path).read_text(encoding="utf-8")
@@ -40,7 +55,7 @@ def load_skills(path="src/skills_master.txt") -> list:
         if not line or line.startswith("#"):
             continue
         skills.append(line.lower())
-    # de-dup, keep order
+    # de-dup keep order
     seen = set()
     out = []
     for s in skills:
@@ -53,16 +68,15 @@ def normalize(text: str) -> str:
     text = text.lower()
     for k, v in ALIASES.items():
         text = text.replace(k, v)
-    # keep + and . and # for skills like c++, node.js, c#
+    # keep + . # / - because of c++, node.js, c#, ci/cd
     text = re.sub(r"[^a-z0-9\s\+\.\#\/\-]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
 def extract_known_skills(text: str, skills: list) -> set:
     found = set()
-    # word-boundary-ish matching for single words; substring for multiword
     for skill in skills:
-        if " " in skill or "." in skill or "#" in skill or "+" in skill or "/" in skill:
+        if " " in skill or any(ch in skill for ch in ".#+/"):
             if skill in text:
                 found.add(skill)
         else:
@@ -70,10 +84,42 @@ def extract_known_skills(text: str, skills: list) -> set:
                 found.add(skill)
     return found
 
-def extract_dynamic_terms(original_text: str) -> set:
-    # captures things like Databricks, Snowflake, Kubernetes, PowerBI, etc.
-    candidates = set(re.findall(r"\b[A-Z][A-Za-z0-9+\-\.]{2,}\b", original_text))
-    return {c.lower() for c in candidates if c.lower() not in COMMON_WORDS}
+def is_bad_token(tok: str) -> bool:
+    t = tok.lower().strip()
+    if len(t) < 2:
+        return True
+    if t in STOPWORDS or t in US_STATES or t in LEGAL_JUNK:
+        return True
+    if t.endswith(".com") or t.endswith(".io") or t.endswith(".ai"):
+        return True
+    # remove pure numbers or dates
+    if re.fullmatch(r"\d+", t):
+        return True
+    return False
+
+def extract_dynamic_tech_tokens(original_text: str) -> set:
+    """
+    Only capture likely TECH tokens, not normal words.
+    Examples we want: S3, EC2, OAuth, JWT, PyTorch, Node.js, C++, C#, Databricks
+    """
+    tokens = set()
+
+    # 1) tokens with digits (S3, EC2, Python3)
+    tokens |= set(re.findall(r"\b[A-Za-z]{1,10}\d{1,4}\b", original_text))
+
+    # 2) tokens with dot (Node.js) or plus/hash (C++, C#)
+    tokens |= set(re.findall(r"\b[A-Za-z][A-Za-z0-9]*\.(?:js|net|io)\b", original_text, flags=re.I))
+    tokens |= set(re.findall(r"\bC\+\+|C#\b", original_text))
+
+    # 3) Common all-caps acronyms (JWT, OAuth, SSO, IAM)
+    tokens |= set(re.findall(r"\b[A-Z]{2,6}\b", original_text))
+
+    cleaned = set()
+    for tok in tokens:
+        t = tok.lower()
+        if not is_bad_token(t):
+            cleaned.add(t)
+    return cleaned
 
 if __name__ == "__main__":
     skills = load_skills()
@@ -87,11 +133,15 @@ if __name__ == "__main__":
     jd_known = extract_known_skills(jd_norm, skills)
     resume_known = extract_known_skills(resume_norm, skills)
 
-    jd_dynamic = extract_dynamic_terms(jd_text)
-    resume_dynamic = extract_dynamic_terms(resume_text)
+    # safer dynamic tech-only tokens
+    jd_dyn = extract_dynamic_tech_tokens(jd_text)
+    resume_dyn = extract_dynamic_tech_tokens(resume_text)
 
-    jd_skills = jd_known | jd_dynamic
-    resume_skills = resume_known | resume_dynamic
+    # Only count dynamic terms if they appear in BOTH JD and Resume (reduces noise hard)
+    dyn_shared = jd_dyn & resume_dyn
+
+    jd_skills = jd_known | dyn_shared
+    resume_skills = resume_known | dyn_shared
 
     matched = jd_skills & resume_skills
     missing = jd_skills - resume_skills
@@ -104,6 +154,5 @@ if __name__ == "__main__":
     print("Missing Skills Count:", len(missing))
     print(f"Skill Match %: {match_percent:.2f}")
 
-    # Optional: show top lists (keeps logs readable)
-    print("\nMatched Skills:", sorted(matched)[:80])
-    print("\nMissing Skills:", sorted(missing)[:80])
+    print("\nMatched Skills:", sorted(matched)[:120])
+    print("\nMissing Skills:", sorted(missing)[:120])
