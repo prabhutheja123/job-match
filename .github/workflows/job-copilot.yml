@@ -35,3 +35,7 @@ jobs:
           RESUME: ${{ github.event.inputs.resume_text }}
         run: |
           python src/run.py
+
+      - name: Extract skills
+        run: |
+          python src/extract_skills.py
