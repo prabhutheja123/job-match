@@ -1,4 +1,9 @@
-# ===== Programming Languages =====
+
+pandas
+jupyter
+dbt
+elt
+data analysis# ===== Programming Languages =====
 python
 java
 javascript
@@ -264,6 +269,11 @@ llamaindex
 openai
 vertex ai
 sagemaker
+pandas
+jupyter
+dbt
+elt
+data analysis
 
 # ===== BI / Visualization =====
 tableau
