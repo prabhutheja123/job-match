@@ -11,13 +11,27 @@ on:
         required: true
 
 jobs:
-  test:
+  run:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Show inputs
-        run: |
-          echo "JD length: ${#JD}"
-          echo "Resume length: ${#RESUME}"
         env:
           JD: ${{ github.event.inputs.job_description }}
           RESUME: ${{ github.event.inputs.resume_text }}
+        run: |
+          echo "JD length: ${#JD}"
+          echo "Resume length: ${#RESUME}"
+
+      - name: Save inputs to files
+        env:
+          JD: ${{ github.event.inputs.job_description }}
+          RESUME: ${{ github.event.inputs.resume_text }}
+        run: |
+          python src/run.py
