@@ -1,0 +1,301 @@
+# ===== Programming Languages =====
+python
+java
+javascript
+typescript
+node.js
+nodejs
+go
+golang
+c
+c++
+cpp
+c#
+csharp
+objective-c
+swift
+kotlin
+scala
+ruby
+php
+rust
+r
+matlab
+bash
+shell
+powershell
+perl
+lua
+dart
+
+# ===== Web & Backend Frameworks =====
+react
+next.js
+nextjs
+vue
+angular
+svelte
+express
+fastapi
+flask
+django
+spring
+spring boot
+micronaut
+quarkus
+nestjs
+dotnet
+asp.net
+laravel
+rails
+
+# ===== Data Engineering / Big Data =====
+sql
+nosql
+etl
+elt
+data engineering
+data analytics
+data analysis
+data modeling
+dimensional modeling
+star schema
+snowflake schema
+data warehousing
+data lake
+data lakehouse
+spark
+pyspark
+spark sql
+hadoop
+hdfs
+hive
+impala
+pig
+yarn
+oozie
+airflow
+dagster
+prefect
+dbt
+kafka
+confluent kafka
+kinesis
+pubsub
+google pubsub
+flink
+beam
+apache beam
+storm
+nifi
+airbyte
+fivetran
+debezium
+
+# ===== Databases / Storage =====
+mysql
+postgresql
+oracle
+sql server
+mariadb
+sqlite
+mongodb
+cassandra
+dynamodb
+redis
+neo4j
+elasticsearch
+opensearch
+couchbase
+snowflake
+redshift
+bigquery
+synapse
+databricks
+delta lake
+iceberg
+hudi
+
+# ===== Cloud Providers =====
+aws
+amazon web services
+gcp
+google cloud
+google cloud platform
+azure
+microsoft azure
+
+# ===== AWS Services =====
+s3
+ec2
+lambda
+iam
+vpc
+cloudwatch
+cloudtrail
+ecr
+ecs
+eks
+rds
+dynamodb
+redshift
+glue
+athena
+emr
+step functions
+sqs
+sns
+eventbridge
+api gateway
+cloudformation
+cdk
+organizations
+kms
+secrets manager
+
+# ===== GCP Services =====
+bigquery
+cloud storage
+gcs
+compute engine
+cloud run
+cloud functions
+cloud composer
+dataproc
+dataflow
+pubsub
+vertex ai
+cloud build
+cloud logging
+cloud monitoring
+iam
+vpc
+secret manager
+
+# ===== Azure Services =====
+adls
+data lake storage
+blob storage
+aks
+acr
+functions
+synapse
+data factory
+event hubs
+service bus
+cosmos db
+monitor
+key vault
+azure devops
+
+# ===== DevOps / SRE =====
+docker
+kubernetes
+k8s
+helm
+terraform
+terragrunt
+pulumi
+ansible
+packer
+jenkins
+github actions
+gitlab ci
+bitbucket pipelines
+azure devops
+argo cd
+argocd
+fluxcd
+prometheus
+grafana
+elk
+elastic stack
+splunk
+datadog
+new relic
+opentelemetry
+sre
+incident management
+
+# ===== OS / Networking / Security =====
+linux
+unix
+windows
+tcp/ip
+dns
+http
+https
+oauth
+oidc
+sso
+ssl
+tls
+jwt
+network security
+iam
+rbac
+encryption
+kms
+secrets management
+vault
+hashicorp vault
+
+# ===== AI / ML / GenAI =====
+machine learning
+ml
+deep learning
+dl
+nlp
+llm
+rag
+vector database
+embeddings
+feature engineering
+tensorflow
+pytorch
+keras
+scikit-learn
+xgboost
+lightgbm
+mlflow
+kubeflow
+langchain
+llamaindex
+openai
+vertex ai
+sagemaker
+
+# ===== BI / Visualization =====
+tableau
+power bi
+looker
+lookml
+superset
+metabase
+
+# ===== Testing / Quality =====
+pytest
+unittest
+junit
+mockito
+selenium
+cypress
+
+# ===== Messaging / APIs / Integration =====
+rest
+graphql
+grpc
+microservices
+soa
+webhooks
+soap
+
+# ===== Data Governance =====
+data governance
+data quality
+data lineage
+mdm
+master data management
+great expectations
+collibra
+alation
