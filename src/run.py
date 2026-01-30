@@ -1,20 +1,22 @@
 import os
 from pathlib import Path
 
-# Create folders
-Path("inputs").mkdir(exist_ok=True)
-Path("outputs").mkdir(exist_ok=True)
+# Final folder structure (LOCKED)
+jd_dir = Path("data/jd")
+resume_dir = Path("data/resume")
+out_dir = Path("out")
+
+jd_dir.mkdir(parents=True, exist_ok=True)
+resume_dir.mkdir(parents=True, exist_ok=True)
+out_dir.mkdir(parents=True, exist_ok=True)
 
 # Read inputs from GitHub Actions
 job_description = os.environ.get("JD", "")
 resume_text = os.environ.get("RESUME", "")
 
-# Save inputs to files
-with open("inputs/job_description.txt", "w", encoding="utf-8") as f:
-    f.write(job_description)
-
-with open("inputs/resume.txt", "w", encoding="utf-8") as f:
-    f.write(resume_text)
+# Save inputs
+(jd_dir / "jd.txt").write_text(job_description, encoding="utf-8")
+(resume_dir / "resume.txt").write_text(resume_text, encoding="utf-8")
 
 print("Inputs saved successfully")
 print("JD chars:", len(job_description))
