@@ -39,3 +39,13 @@ jobs:
       - name: Extract skills
         run: |
           python src/extract_skills.py
+
+      - name: Generate tailored resume (generic)
+        run: |
+          python src/tailor_resume_generic.py
+
+      - name: Upload tailored resume artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tailored-resume
+          path: out/tailored_resume.txt
