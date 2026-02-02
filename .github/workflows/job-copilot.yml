@@ -44,8 +44,22 @@ jobs:
         run: |
           python src/tailor_resume_generic.py
 
-      - name: Upload tailored resume artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tailored-resume
-          path: out/tailored_resume.txt
+      - name: Show generated resume in logs (tailored_resume.txt)
+        run: |
+          echo "================= TAILORED RESUME (START) ================="
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path("out/tailored_resume.txt")
+          if not p.exists():
+              raise SystemExit("ERROR: out/tailored_resume.txt not found")
+
+          text = p.read_text(encoding="utf-8", errors="ignore")
+
+          # Print in chunks to reduce risk of log truncation
+          chunk = 3500
+          for i in range(0, len(text), chunk):
+              print(text[i:i+chunk])
+              print("\n--- chunk end ---\n")
+          PY
+          echo "================= TAILORED RESUME (END) ==================="
